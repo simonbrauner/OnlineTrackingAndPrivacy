@@ -1,0 +1,45 @@
+name: Create .zip archive for solution 01
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '01/solution/**'
+      - '.github/workflows/assignment-01-solution.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Remove old release
+        run: |
+          if gh release view solution-01 --json tagName; then
+            gh release delete solution-01 -y
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Remove old release tag
+        run: |
+          git fetch --tags
+          if git rev-parse -q --verify "refs/tags/solution-01"; then
+            git tag -d solution-01
+            git push origin :refs/tags/solution-01
+          fi
+
+      - name: Create tar.gz archive
+        run: |
+          cd 01 && zip -r ../s1172648.zip s1172648
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: solution-01
+          name: solution-01
+          files: s1172648.zip
+          body: "Solution for week 1"
+          draft: false
