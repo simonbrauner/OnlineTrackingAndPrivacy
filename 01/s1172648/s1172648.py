@@ -53,6 +53,11 @@ def num_requests_w_cookies(log, results):
         if get_header_value(entry['request']['headers'], 'cookie') is not None])
 
 
+def num_responses_w_cookies(log, results):
+    results['num_responses_w_cookies'] = len([entry for entry in log['entries']
+        if get_header_value(entry['response']['headers'], 'set-cookie') is not None])
+
+
 def collect_results(log):
     results = dict()
 
@@ -61,6 +66,7 @@ def collect_results(log):
     num_redirections(log, results)
     num_cross_origin_redirections(log, results)
     num_requests_w_cookies(log, results)
+    num_responses_w_cookies(log, results)
 
     return results
 
