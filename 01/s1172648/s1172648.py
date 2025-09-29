@@ -5,16 +5,21 @@ from sys import argv, exit
 from json import loads
 
 from tld import get_fld
+from tld.exceptions import TldBadUrl
 
 
 def num_reqs(log, results):
     results['num_reqs'] = len(log['entries'])
 
 
-def num_responses(log, results):
+def has_response(entry):
     # Status equal to 0 indicates error to receive response.
+    return entry['response']['status'] != 0
+
+
+def num_responses(log, results):
     results['num_responses'] = len([entry for entry in log['entries']
-        if entry['response']['status'] != 0])
+        if has_response(entry)])
 
 
 def is_redirection(entry):
@@ -36,7 +41,7 @@ def num_cross_origin_redirections(log, results):
                         != get_fld(entry['request']['url'])):
                     results['num_cross_origin_redirections'] += 1
             # Treat url parsing error as no cross origin redirection.
-            except:
+            except TldBadUrl:
                 pass
 
 
@@ -58,6 +63,19 @@ def num_responses_w_cookies(log, results):
         if get_header_value(entry['response']['headers'], 'set-cookie') is not None])
 
 
+def third_party_domains(log, results):
+    first_party_domain = get_fld(log['pages'][0]['title'])
+    third_party_domains = set()
+
+    for entry in log['entries']:
+        if has_response(entry):
+            third_party_domains.add(get_fld(entry['request']['url']))
+
+    third_party_domains.discard(first_party_domain)
+
+    results['third_party_domains'] = [domain for domain in third_party_domains]
+
+
 def collect_results(log):
     results = dict()
 
@@ -67,6 +85,7 @@ def collect_results(log):
     num_cross_origin_redirections(log, results)
     num_requests_w_cookies(log, results)
     num_responses_w_cookies(log, results)
+    third_party_domains(log, results)
 
     return results
 
