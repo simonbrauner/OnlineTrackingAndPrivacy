@@ -40,6 +40,19 @@ def num_cross_origin_redirections(log, results):
                 pass
 
 
+def get_header_value(headers, name):
+    for header in headers:
+        if header['name'].lower() == name.lower():
+            return header['value']
+
+    return None
+
+
+def num_requests_w_cookies(log, results):
+    results['num_requests_w_cookies'] = len([entry for entry in log['entries']
+        if get_header_value(entry['request']['headers'], 'cookie') is not None])
+
+
 def collect_results(log):
     results = dict()
 
@@ -47,6 +60,7 @@ def collect_results(log):
     num_responses(log, results)
     num_redirections(log, results)
     num_cross_origin_redirections(log, results)
+    num_requests_w_cookies(log, results)
 
     return results
 
