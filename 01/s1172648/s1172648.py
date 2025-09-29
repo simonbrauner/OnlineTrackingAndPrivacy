@@ -2,9 +2,18 @@
 
 from sys import argv, exit
 
-def analyze_har(path):
-    print(f'TODO: {path}')
+from json import loads
 
+def analyze_har(path):
+    try:
+        with open(path, 'r') as file:
+            contents = file.read()
+    except Exception as e:
+        print(f'Failed to read file: {e}')
+        exit(1)
+
+    har = loads(contents)
+    print(har)
 
 def main():
     if len(argv) != 2:
