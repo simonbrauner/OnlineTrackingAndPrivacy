@@ -9,10 +9,16 @@ def num_reqs(log, results):
     results['num_reqs'] = len(log['entries'])
 
 
+def num_responses(log, results):
+    # Status equal to 0 indicates error to receive response.
+    results['num_responses'] = len([x for x in log['entries'] if x['response']['status'] != 0])
+
+
 def collect_results(log):
     results = dict()
 
     num_reqs(log, results)
+    num_responses(log, results)
 
     return results
 
