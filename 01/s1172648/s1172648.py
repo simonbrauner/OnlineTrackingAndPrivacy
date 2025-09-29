@@ -4,6 +4,8 @@ from sys import argv, exit
 
 from json import loads
 
+from tld import get_fld
+
 
 def num_reqs(log, results):
     results['num_reqs'] = len(log['entries'])
@@ -11,13 +13,40 @@ def num_reqs(log, results):
 
 def num_responses(log, results):
     # Status equal to 0 indicates error to receive response.
-    results['num_responses'] = len([x for x in log['entries'] if x['response']['status'] != 0])
+    results['num_responses'] = len([entry for entry in log['entries']
+        if entry['response']['status'] != 0])
+
+
+def is_redirection(entry):
+    return 300 <= entry['response']['status'] < 400
 
 
 def num_redirections(log, results):
     # Status equal to 0 indicates error to receive response.
-    results['num_redirections'] = len([x for x in log['entries']
-        if 300 <= x['response']['status'] < 400])
+    results['num_redirections'] = len([entry for entry in log['entries']
+        if is_redirection(entry)])
+
+
+def get_location(headers):
+    for header in headers:
+        if header['name'].lower() == 'location':
+            return header['value']
+
+    return None
+
+
+def num_cross_origin_redirections(log, results):
+    results['num_cross_origin_redirections'] = 0
+
+    for entry in log['entries']:
+        if is_redirection(entry):
+            location = get_location(entry['response']['headers'])
+
+            try:
+                if get_fld(location) != get_fld(entry['request']['url']):
+                    results['num_cross_origin_redirections'] += 1
+            except:
+                pass
 
 
 def collect_results(log):
@@ -26,6 +55,7 @@ def collect_results(log):
     num_reqs(log, results)
     num_responses(log, results)
     num_redirections(log, results)
+    num_cross_origin_redirections(log, results)
 
     return results
 
