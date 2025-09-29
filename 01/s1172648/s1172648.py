@@ -22,17 +22,8 @@ def is_redirection(entry):
 
 
 def num_redirections(log, results):
-    # Status equal to 0 indicates error to receive response.
     results['num_redirections'] = len([entry for entry in log['entries']
         if is_redirection(entry)])
-
-
-def get_location(headers):
-    for header in headers:
-        if header['name'].lower() == 'location':
-            return header['value']
-
-    return None
 
 
 def num_cross_origin_redirections(log, results):
@@ -40,11 +31,11 @@ def num_cross_origin_redirections(log, results):
 
     for entry in log['entries']:
         if is_redirection(entry):
-            location = get_location(entry['response']['headers'])
-
             try:
-                if get_fld(location) != get_fld(entry['request']['url']):
+                if (get_fld(entry['response']['redirectURL'])
+                        != get_fld(entry['request']['url'])):
                     results['num_cross_origin_redirections'] += 1
+            # Treat url parsing error as no cross origin redirection.
             except:
                 pass
 
