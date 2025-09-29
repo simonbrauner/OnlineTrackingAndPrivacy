@@ -8,22 +8,60 @@ from tld import get_fld
 from tld.exceptions import TldBadUrl
 
 
+####################
+##  Input/Output  ##
+####################
+
+def analyze_har(path):
+    try:
+        with open(path, 'r') as file:
+            har = file.read()
+    except OSError as e:
+        print(f'Failed to read file: {e}')
+        exit(1)
+
+    log = loads(har)['log']
+
+    results = collect_results(log)
+
+    return results
+
+
+def main():
+    if len(argv) != 2:
+        print(f'Usage: {argv[0]} <HAR path>')
+        exit(1)
+
+    results = analyze_har(argv[1])
+
+    print(results)
+
+
+##########################
+##  Results Dictionary  ##
+##########################
+
+def collect_results(log):
+    results = dict()
+
+    num_reqs(log, results)
+    num_responses(log, results)
+    num_redirections(log, results)
+    num_cross_origin_redirections(log, results)
+    num_requests_w_cookies(log, results)
+    num_responses_w_cookies(log, results)
+    third_party_domains(log, results)
+
+    return results
+
+
 def num_reqs(log, results):
     results['num_reqs'] = len(log['entries'])
-
-
-def has_response(entry):
-    # Status equal to 0 indicates error to receive response.
-    return entry['response']['status'] != 0
 
 
 def num_responses(log, results):
     results['num_responses'] = len([entry for entry in log['entries']
         if has_response(entry)])
-
-
-def is_redirection(entry):
-    return 300 <= entry['response']['status'] < 400
 
 
 def num_redirections(log, results):
@@ -43,14 +81,6 @@ def num_cross_origin_redirections(log, results):
             # Treat url parsing error as no cross origin redirection.
             except TldBadUrl:
                 pass
-
-
-def get_header_value(headers, name):
-    for header in headers:
-        if header['name'].lower() == name.lower():
-            return header['value']
-
-    return None
 
 
 def num_requests_w_cookies(log, results):
@@ -76,43 +106,25 @@ def third_party_domains(log, results):
     results['third_party_domains'] = [domain for domain in third_party_domains]
 
 
-def collect_results(log):
-    results = dict()
+#########################
+##  Utility Functions  ##
+#########################
 
-    num_reqs(log, results)
-    num_responses(log, results)
-    num_redirections(log, results)
-    num_cross_origin_redirections(log, results)
-    num_requests_w_cookies(log, results)
-    num_responses_w_cookies(log, results)
-    third_party_domains(log, results)
-
-    return results
+def has_response(entry):
+    # Status equal to 0 indicates error to receive response.
+    return entry['response']['status'] != 0
 
 
-def analyze_har(path):
-    try:
-        with open(path, 'r') as file:
-            har = file.read()
-    except Exception as e:
-        print(f'Failed to read file: {e}')
-        exit(1)
+def is_redirection(entry):
+    return 300 <= entry['response']['status'] < 400
 
-    log = loads(har)['log']
-    #print(log['entries'][0].keys())
 
-    results = collect_results(log)
+def get_header_value(headers, name):
+    for header in headers:
+        if header['name'].lower() == name.lower():
+            return header['value']
 
-    return results
-
-def main():
-    if len(argv) != 2:
-        print(f'Usage: {argv[0]} <HAR path>')
-        exit(1)
-
-    results = analyze_har(argv[1])
-
-    print(results)
+    return None
 
 
 if __name__ == '__main__':
