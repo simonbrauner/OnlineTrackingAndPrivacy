@@ -51,6 +51,7 @@ def collect_results(log):
     num_requests_w_cookies(log, results)
     num_responses_w_cookies(log, results)
     third_party_domains(log, results)
+    potential_tracking_cookies(log, results)
 
     return results
 
@@ -106,6 +107,20 @@ def third_party_domains(log, results):
     results['third_party_domains'] = [domain for domain in third_party_domains]
 
 
+def potential_tracking_cookies(log, results):
+    cookies = set()
+
+    for entry in log['entries']:
+        for value in get_header_values(entry['response']['headers'], 'set-cookie'):
+            request_domain = get_fld(entry['request']['url'])
+
+            cookies.add(parse_potential_tracking_cookie(value, request_domain))
+
+    cookies.discard(None)
+
+    results['potential_tracking_cookies'] = [cookie for cookie in cookies]
+
+
 #########################
 ##  Utility Functions  ##
 #########################
@@ -125,6 +140,27 @@ def get_header_value(headers, name):
             return header['value']
 
     return None
+
+
+def get_header_values(headers, name):
+    values = []
+
+    for header in headers:
+        if header['name'].lower() == name.lower():
+            values.append(header['value'])
+
+    return values
+
+
+# Returns None when the cookie does not have SameSite=None.
+def parse_potential_tracking_cookie(value, request_domain):
+        name_value, attributes = value.split(';', 1)
+        name, value = name_value.split('=', 1)
+
+        if 'SameSite=None' not in attributes:
+            return None
+
+        return (name, value, request_domain)
 
 
 if __name__ == '__main__':
