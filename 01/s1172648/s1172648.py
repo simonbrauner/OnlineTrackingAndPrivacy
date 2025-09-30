@@ -4,6 +4,8 @@ from sys import argv, exit
 
 from json import loads
 
+from urllib.parse import urlparse
+
 from tld import get_fld
 from tld.exceptions import TldBadUrl
 
@@ -56,6 +58,7 @@ def collect_results(log, domain_map):
     third_party_domains(log, results)
     potential_tracking_cookies(log, results)
     third_party_entities(log, results, domain_map)
+    non_get_request_origins(log, results)
 
     return results
 
@@ -138,6 +141,19 @@ def third_party_entities(log, results, domain_map):
         in display_names]
 
 
+def non_get_request_origins(log, results):
+    non_get_origins = set()
+
+    for entry in log['entries']:
+        if entry['request']['method'].upper() != 'GET':
+            url = urlparse(entry['request']['url'])
+            non_get_origins.add((url.scheme, assume_port(url.scheme),
+                url.hostname))
+
+    results['non_get_request_origins'] = [origin for origin
+        in non_get_origins]
+
+
 #########################
 ##  Utility Functions  ##
 #########################
@@ -171,6 +187,15 @@ def get_header_values(headers, name):
 
 def get_first_party_domain(log):
     return get_fld(log['pages'][0]['title'])
+
+
+def assume_port(protocol):
+    if protocol.upper() == 'HTTPS':
+        return 443
+    if protocol.upper() == 'HTTP':
+        return 80
+
+    assert False
 
 
 # Returns None when the cookie does not have SameSite=None.
