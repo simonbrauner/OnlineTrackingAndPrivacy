@@ -14,15 +14,18 @@ from tld.exceptions import TldBadUrl
 
 def analyze_har(path):
     try:
-        with open(path, 'r') as file:
-            har = file.read()
+        with open(path, 'r') as har_file:
+            har_text = har_file.read()
+        with open('domain_map.json', 'r') as domain_map_file:
+            domain_map_text = domain_map_file.read()
     except OSError as e:
         print(f'Failed to read file: {e}')
         exit(1)
 
-    log = loads(har)['log']
+    log = loads(har_text)['log']
+    domain_map = loads(domain_map_text)
 
-    results = collect_results(log)
+    results = collect_results(log, domain_map)
 
     return results
 
@@ -41,7 +44,7 @@ def main():
 ##  Results Dictionary  ##
 ##########################
 
-def collect_results(log):
+def collect_results(log, domain_map):
     results = dict()
 
     num_reqs(log, results)
@@ -52,6 +55,7 @@ def collect_results(log):
     num_responses_w_cookies(log, results)
     third_party_domains(log, results)
     potential_tracking_cookies(log, results)
+    third_party_entities(log, results, domain_map)
 
     return results
 
@@ -95,7 +99,7 @@ def num_responses_w_cookies(log, results):
 
 
 def third_party_domains(log, results):
-    first_party_domain = get_fld(log['pages'][0]['title'])
+    first_party_domain = get_first_party_domain(log)
     third_party_domains = set()
 
     for entry in log['entries']:
@@ -119,6 +123,19 @@ def potential_tracking_cookies(log, results):
     cookies.discard(None)
 
     results['potential_tracking_cookies'] = [cookie for cookie in cookies]
+
+
+def third_party_entities(log, results, domain_map):
+    first_party_domain = get_first_party_domain(log)
+    display_names = set()
+
+    for entry in log['entries']:
+        request_domain = get_fld(entry['request']['url'])
+        if request_domain != first_party_domain and request_domain in domain_map:
+            display_names.add(domain_map[request_domain]['displayName'])
+
+    results['third_party_entities'] = [display_name for display_name
+        in display_names]
 
 
 #########################
@@ -150,6 +167,10 @@ def get_header_values(headers, name):
             values.append(header['value'])
 
     return values
+
+
+def get_first_party_domain(log):
+    return get_fld(log['pages'][0]['title'])
 
 
 # Returns None when the cookie does not have SameSite=None.
