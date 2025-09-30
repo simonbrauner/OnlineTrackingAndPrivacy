@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-from sys import argv, exit
+from sys import argv, exit, stderr
 
-from json import loads
+from json import loads, dump
 
 from urllib.parse import urlparse
 
@@ -21,7 +21,7 @@ def analyze_har(path):
         with open('domain_map.json', 'r') as domain_map_file:
             domain_map_text = domain_map_file.read()
     except OSError as e:
-        print(f'Failed to read file: {e}')
+        print(f'Failed to read file: {e}', file=stderr)
         exit(1)
 
     log = loads(har_text)['log']
@@ -32,14 +32,32 @@ def analyze_har(path):
     return results
 
 
+def write_jsons(paths):
+    all_results = []
+
+    for path in paths:
+        current_results = analyze_har(path)
+        all_results.append(current_results)
+
+        with open(get_json_path(path), 'w') as file:
+            dump(current_results, file, indent=4)
+
+    # TODO merged json
+
+
 def main():
-    if len(argv) != 2:
-        print(f'Usage: {argv[0]} <HAR path>')
+    if len(argv) == 1:
+        path1 = 'universiteitleiden.nl.har'
+        path2 = 'uva.nl.har'
+    elif (len(argv) == 3 and is_har_path(argv[1])
+            and is_har_path(argv[2])):
+        path1 = argv[1]
+        path2 = argv[2]
+    else:
+        print(f'Usage: {argv[0]} [path1.har path2.har]', file=stderr)
         exit(1)
 
-    results = analyze_har(argv[1])
-
-    print(results)
+    write_jsons([path1, path2])
 
 
 ##########################
@@ -196,6 +214,14 @@ def assume_port(protocol):
         return 80
 
     assert False
+
+
+def is_har_path(path):
+    return path.endswith('.har')
+
+
+def get_json_path(har_path):
+    return har_path[:-len('har')] + 'json'
 
 
 # Returns None when the cookie does not have SameSite=None.
