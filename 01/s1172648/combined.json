@@ -1,0 +1,22 @@
+{
+    "common_third_party_domains": [
+        "doubleclick.net",
+        "facebook.com",
+        "facebook.net",
+        "google-analytics.com",
+        "google.com",
+        "google.nl",
+        "googletagmanager.com",
+        "licdn.com",
+        "linkedin.com",
+        "sc-static.net",
+        "snapchat.com"
+    ],
+    "common_third_party_entities": [
+        "Facebook",
+        "Google",
+        "Microsoft",
+        "Snap"
+    ],
+    "common_cookies": []
+}

@@ -42,7 +42,10 @@ def write_jsons(paths):
         with open(get_json_path(path), 'w') as file:
             dump(current_results, file, indent=4)
 
-    # TODO merged json
+    combined_results = combine_results(all_results)
+
+    with open('combined.json', 'w') as file:
+        dump(combined_results, file, indent=4)
 
 
 def main():
@@ -129,7 +132,7 @@ def third_party_domains(log, results):
 
     third_party_domains.discard(first_party_domain)
 
-    results['third_party_domains'] = [domain for domain in third_party_domains]
+    results['third_party_domains'] = set_to_list(third_party_domains)
 
 
 def potential_tracking_cookies(log, results):
@@ -143,7 +146,7 @@ def potential_tracking_cookies(log, results):
 
     cookies.discard(None)
 
-    results['potential_tracking_cookies'] = [cookie for cookie in cookies]
+    results['potential_tracking_cookies'] = set_to_list(cookies)
 
 
 def third_party_entities(log, results, domain_map):
@@ -155,8 +158,7 @@ def third_party_entities(log, results, domain_map):
         if request_domain != first_party_domain and request_domain in domain_map:
             display_names.add(domain_map[request_domain]['displayName'])
 
-    results['third_party_entities'] = [display_name for display_name
-        in display_names]
+    results['third_party_entities'] = set_to_list(display_names)
 
 
 def non_get_request_origins(log, results):
@@ -168,8 +170,34 @@ def non_get_request_origins(log, results):
             non_get_origins.add((url.scheme, assume_port(url.scheme),
                 url.hostname))
 
-    results['non_get_request_origins'] = [origin for origin
-        in non_get_origins]
+    results['non_get_request_origins'] = set_to_list(non_get_origins)
+
+
+###################################
+##  Combined Results Dictionary  ##
+###################################
+
+def combine_results(all_results):
+    combined_results = dict()
+
+    combine_field(all_results, combined_results,
+        'third_party_domains', 'common_third_party_domains')
+    combine_field(all_results, combined_results,
+        'third_party_entities', 'common_third_party_entities')
+    combine_field(all_results, combined_results,
+        'potential_tracking_cookies', 'common_cookies')
+
+    return combined_results
+
+
+def combine_field(all_results, combined_results,
+        input_field_name, output_field_name):
+    field_values = list_to_set(all_results[0][input_field_name])
+
+    for remaining_results in all_results:
+        field_values &= list_to_set(remaining_results[input_field_name])
+
+    combined_results[output_field_name] = set_to_list(field_values)
 
 
 #########################
@@ -222,6 +250,15 @@ def is_har_path(path):
 
 def get_json_path(har_path):
     return har_path[:-len('har')] + 'json'
+
+
+def list_to_set(list_to_convert):
+    return {value for value in list_to_convert}
+
+
+def set_to_list(set_to_convert):
+    # Sort to make the results reproducible.
+    return list(sorted(set_to_convert))
 
 
 # Returns None when the cookie does not have SameSite=None.

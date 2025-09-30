@@ -6,54 +6,49 @@
     "num_requests_w_cookies": 111,
     "num_responses_w_cookies": 24,
     "third_party_domains": [
-        "googletagmanager.com",
-        "google-analytics.com",
-        "google.nl",
-        "licdn.com",
-        "gstatic.com",
-        "facebook.net",
-        "linkedin.com",
-        "studentspeak.io",
-        "facebook.com",
         "bing.com",
-        "fonts.googleapis.com",
-        "snapchat.com",
-        "sc-static.net",
-        "googleadservices.com",
         "clarity.ms",
+        "doubleclick.net",
+        "facebook.com",
+        "facebook.net",
+        "fonts.googleapis.com",
+        "google-analytics.com",
         "google.com",
+        "google.nl",
+        "googleadservices.com",
+        "googletagmanager.com",
+        "gstatic.com",
         "hotjar.com",
-        "doubleclick.net"
+        "licdn.com",
+        "linkedin.com",
+        "sc-static.net",
+        "snapchat.com",
+        "studentspeak.io"
     ],
     "potential_tracking_cookies": [
-        [
-            "li_gc",
-            "MTswOzE3NTkxNjkyNTA7MjswMjHn9mTh992tLnBqTHXvrKja1xyLPW73tXVe8lK3sMEv1Q==",
-            "linkedin.com"
-        ],
         [
             "MUID",
             "0368F008258F66CC0D55E67E24DA67BB",
             "bing.com"
         ],
         [
-            "bcookie",
-            "\"v=2&2ce11dce-c373-4f4e-8281-51784e61fdda\"",
-            "linkedin.com"
+            "MUID",
+            "07F26991AE23674418057FE7AF76662C",
+            "bing.com"
+        ],
+        [
+            "MUID",
+            "2CC0525B37E36B3705BA442D36B66AEC",
+            "bing.com"
+        ],
+        [
+            "MUID",
+            "3FEE8142BDE76B4A3CDD9734BCB26A28",
+            "bing.com"
         ],
         [
             "bcookie",
             "\"v=2&135a37c4-9f85-4257-8fbd-9ee04001a48c\"",
-            "linkedin.com"
-        ],
-        [
-            "li_gc",
-            "MTswOzE3NTkxNjkyNDI7MjswMjFLn4my9B68CJpq5pbfvGpqAX1+lHg6S/Lf2uPSYr1biQ==",
-            "linkedin.com"
-        ],
-        [
-            "bcookie",
-            "\"v=2&c1a76f57-7b2e-4adb-8d27-39948688284d\"",
             "linkedin.com"
         ],
         [
@@ -62,33 +57,8 @@
             "linkedin.com"
         ],
         [
-            "MUID",
-            "2CC0525B37E36B3705BA442D36B66AEC",
-            "bing.com"
-        ],
-        [
-            "lidc",
-            "\"b=OGST00:s=O:r=O:a=O:p=O:g=3770:u=1:x=1:i=1759169246:t=1759255646:v=2:sig=AQEJusdETL_qExxsHRRlAMvg8053vgpN\"",
-            "linkedin.com"
-        ],
-        [
-            "li_gc",
-            "MTswOzE3NTkxNjkyNDY7MjswMjFfgd89SyP4Oxxk7r8H+N8cMheZ9Pyh+05VccoKDjJnlg==",
-            "linkedin.com"
-        ],
-        [
-            "MUID",
-            "3FEE8142BDE76B4A3CDD9734BCB26A28",
-            "bing.com"
-        ],
-        [
-            "li_gc",
-            "MTswOzE3NTkxNjkyNDI7MjswMjHB+F9dor55g7cf5MK/dD8Xhb2rSKL3VGxedAvQedv2Aw==",
-            "linkedin.com"
-        ],
-        [
-            "lidc",
-            "\"b=OGST00:s=O:r=O:a=O:p=O:g=3770:u=1:x=1:i=1759169250:t=1759255650:v=2:sig=AQEaz4KybmVE8UA0RDq78bjNYR8E76Mt\"",
+            "bcookie",
+            "\"v=2&2ce11dce-c373-4f4e-8281-51784e61fdda\"",
             "linkedin.com"
         ],
         [
@@ -97,13 +67,33 @@
             "linkedin.com"
         ],
         [
+            "bcookie",
+            "\"v=2&c1a76f57-7b2e-4adb-8d27-39948688284d\"",
+            "linkedin.com"
+        ],
+        [
+            "li_gc",
+            "MTswOzE3NTkxNjkyNDI7MjswMjFLn4my9B68CJpq5pbfvGpqAX1+lHg6S/Lf2uPSYr1biQ==",
+            "linkedin.com"
+        ],
+        [
+            "li_gc",
+            "MTswOzE3NTkxNjkyNDI7MjswMjHB+F9dor55g7cf5MK/dD8Xhb2rSKL3VGxedAvQedv2Aw==",
+            "linkedin.com"
+        ],
+        [
             "li_gc",
             "MTswOzE3NTkxNjkyNDY7MjswMjF1KKJpCuUcfugASAfGXWHm630hV+lhauJgLNd3AWWT6A==",
             "linkedin.com"
         ],
         [
-            "lidc",
-            "\"b=TGST00:s=T:r=T:a=T:p=T:g=3755:u=1:x=1:i=1759169246:t=1759255646:v=2:sig=AQG69KHjUqx0vnRfsBMFIrOBCkqh1MGA\"",
+            "li_gc",
+            "MTswOzE3NTkxNjkyNDY7MjswMjFfgd89SyP4Oxxk7r8H+N8cMheZ9Pyh+05VccoKDjJnlg==",
+            "linkedin.com"
+        ],
+        [
+            "li_gc",
+            "MTswOzE3NTkxNjkyNTA7MjswMjHn9mTh992tLnBqTHXvrKja1xyLPW73tXVe8lK3sMEv1Q==",
             "linkedin.com"
         ],
         [
@@ -112,17 +102,27 @@
             "linkedin.com"
         ],
         [
-            "MUID",
-            "07F26991AE23674418057FE7AF76662C",
-            "bing.com"
+            "lidc",
+            "\"b=OGST00:s=O:r=O:a=O:p=O:g=3770:u=1:x=1:i=1759169246:t=1759255646:v=2:sig=AQEJusdETL_qExxsHRRlAMvg8053vgpN\"",
+            "linkedin.com"
+        ],
+        [
+            "lidc",
+            "\"b=OGST00:s=O:r=O:a=O:p=O:g=3770:u=1:x=1:i=1759169250:t=1759255650:v=2:sig=AQEaz4KybmVE8UA0RDq78bjNYR8E76Mt\"",
+            "linkedin.com"
+        ],
+        [
+            "lidc",
+            "\"b=TGST00:s=T:r=T:a=T:p=T:g=3755:u=1:x=1:i=1759169246:t=1759255646:v=2:sig=AQG69KHjUqx0vnRfsBMFIrOBCkqh1MGA\"",
+            "linkedin.com"
         ]
     ],
     "third_party_entities": [
-        "Microsoft",
-        "Hotjar",
+        "Facebook",
         "Google",
-        "Snap",
-        "Facebook"
+        "Hotjar",
+        "Microsoft",
+        "Snap"
     ],
     "non_get_request_origins": [
         [
@@ -133,27 +133,7 @@
         [
             "https",
             443,
-            "www.universiteitleiden.nl"
-        ],
-        [
-            "https",
-            443,
-            "region1.google-analytics.com"
-        ],
-        [
-            "https",
-            443,
-            "tr6.snapchat.com"
-        ],
-        [
-            "https",
-            443,
-            "tr.snapchat.com"
-        ],
-        [
-            "https",
-            443,
-            "www.google.com"
+            "bat.bing.com"
         ],
         [
             "https",
@@ -163,7 +143,27 @@
         [
             "https",
             443,
-            "bat.bing.com"
+            "region1.google-analytics.com"
+        ],
+        [
+            "https",
+            443,
+            "tr.snapchat.com"
+        ],
+        [
+            "https",
+            443,
+            "tr6.snapchat.com"
+        ],
+        [
+            "https",
+            443,
+            "www.google.com"
+        ],
+        [
+            "https",
+            443,
+            "www.universiteitleiden.nl"
         ]
     ]
 }
